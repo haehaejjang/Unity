@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 #endif
@@ -21,7 +22,26 @@ namespace StarterAssets
 		[Tooltip("Acceleration and deceleration")]
 		public float SpeedChangeRate = 10.0f;
 
-		[Space(10)]
+        //UI sprint
+        [Header("Sprint Stamina")]
+        public Image SprintBarFill;
+        public float MaxSprintStamina = 5f;
+        public float SprintDrainRate = 1f;
+        public float SprintRecoverRate = 0.8f;
+        public float SprintRecoverDelay = 1f;
+
+        private float _sprintStamina;
+		private float _sprintRecoverTimer;
+
+        private void UpdateSprintBar()
+        {
+            if (SprintBarFill != null)
+            {
+                SprintBarFill.fillAmount = _sprintStamina / MaxSprintStamina;
+            }
+        }
+
+        [Space(10)]
 		[Tooltip("The height the player can jump")]
 		public float JumpHeight = 1.2f;
 		[Tooltip("The character uses its own gravity value. The engine default is -9.81f")]
@@ -108,7 +128,11 @@ namespace StarterAssets
 			// reset our timeouts on start
 			_jumpTimeoutDelta = JumpTimeout;
 			_fallTimeoutDelta = FallTimeout;
-		}
+
+            //UI Sprint
+            _sprintStamina = MaxSprintStamina;
+            UpdateSprintBar();
+        }
 
 		private void Update()
 		{
@@ -153,14 +177,39 @@ namespace StarterAssets
 
 		private void Move()
 		{
-			// set target speed based on move speed, sprint speed and if sprint is pressed
-			float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
+            // set target speed based on move speed, sprint speed and if sprint is pressed
+            bool isMoving = _input.move != Vector2.zero;
+            bool canSprint = _sprintStamina > 0f;
+            bool isSprinting = _input.sprint && isMoving && canSprint;
 
-			// a simplistic acceleration and deceleration designed to be easy to remove, replace, or iterate upon
+            float targetSpeed = isSprinting ? SprintSpeed : MoveSpeed;
 
-			// note: Vector2's == operator uses approximation so is not floating point error prone, and is cheaper than magnitude
-			// if there is no input, set the target speed to 0
-			if (_input.move == Vector2.zero) targetSpeed = 0.0f;
+            if (isSprinting)
+            {
+                _sprintStamina -= SprintDrainRate * Time.deltaTime;
+                _sprintStamina = Mathf.Clamp(_sprintStamina, 0f, MaxSprintStamina);
+                _sprintRecoverTimer = SprintRecoverDelay;
+            }
+            else
+            {
+                if (_sprintRecoverTimer > 0f)
+                {
+                    _sprintRecoverTimer -= Time.deltaTime;
+                }
+                else
+                {
+                    _sprintStamina += SprintRecoverRate * Time.deltaTime;
+                    _sprintStamina = Mathf.Clamp(_sprintStamina, 0f, MaxSprintStamina);
+                }
+            }
+
+            UpdateSprintBar();
+
+            // a simplistic acceleration and deceleration designed to be easy to remove, replace, or iterate upon
+
+            // note: Vector2's == operator uses approximation so is not floating point error prone, and is cheaper than magnitude
+            // if there is no input, set the target speed to 0
+            if (_input.move == Vector2.zero) targetSpeed = 0.0f;
 
 			// a reference to the players current horizontal velocity
 			float currentHorizontalSpeed = new Vector3(_controller.velocity.x, 0.0f, _controller.velocity.z).magnitude;

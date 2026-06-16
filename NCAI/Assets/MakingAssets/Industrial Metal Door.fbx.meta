@@ -1,9 +1,24 @@
 fileFormatVersion: 2
-guid: 9c0d10f65830d65419ad5da347ce561f
+guid: a2324e5151c5c0443975a3522b83f362
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: material_0
+    second: {fileID: 2100000, guid: f42191ea8539ec64391869f60d5c475a, type: 2}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: diffuse
+    second: {fileID: 2800000, guid: c84e3fecdaa5a67459330d6ed347a4ea, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: normal
+    second: {fileID: 2800000, guid: e352097ff8aba3442a31cc10e1485627, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -68,7 +83,7 @@ ModelImporter:
     secondaryUVMinLightmapResolution: 40
     secondaryUVMinObjectScale: 1
     secondaryUVPackMargin: 4
-    useFileScale: 1
+    useFileScale: 0
     strictVertexDataChecks: 0
   tangentSpace:
     normalSmoothAngle: 60
