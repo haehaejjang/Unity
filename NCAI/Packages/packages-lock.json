@@ -1,7 +1,5 @@
 {
   "dependencies": {
-    "com.ncai.varco3d.bridge": {
-      "version": "file:C:/Users/세은/Downloads/VARCO3D-Bridge-for-Unity",
       "depth": 0,
       "source": "local",
       "dependencies": {

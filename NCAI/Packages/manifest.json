@@ -1,6 +1,5 @@
 {
   "dependencies": {
-    "com.ncai.varco3d.bridge": "file:C:/Users/세은/Downloads/VARCO3D-Bridge-for-Unity",
     "com.unity.2d.sprite": "1.0.0",
     "com.unity.ai.navigation": "2.0.12",
     "com.unity.cinemachine": "3.1.2",
